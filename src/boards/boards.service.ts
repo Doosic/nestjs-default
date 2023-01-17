@@ -19,7 +19,7 @@ export class BoardsService {
       description,
       status: BoardStatus.PUBLIC,
     };
-    console.log(board);
+
     this.boards.push(board);
     return board;
   }
@@ -30,5 +30,11 @@ export class BoardsService {
 
   deleteBoard(id: string): void {
     this.boards = this.boards.filter((board) => board.id !== id);
+  }
+
+  updateBoardStatus(id: string, status: BoardStatus): Board {
+    const board = this.getBoardById(id);
+    board.status = status;
+    return board;
   }
 }
