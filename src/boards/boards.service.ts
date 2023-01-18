@@ -1,40 +1,27 @@
 import { Injectable } from '@nestjs/common';
-import { Board, BoardStatus } from './board.model';
-import { v1 as uuid } from 'uuid';
 import { CreateBoardDto } from './dto/create-board.dto';
+import { BoardEntity } from './board.entity';
+import { BoardRepository } from './board.repository';
 
 @Injectable()
 export class BoardsService {
-  private boards: Board[] = [];
+  constructor(private boardRepository: BoardRepository) {}
 
-  getAllBoards(): Board[] {
-    return this.boards;
+  createBoard(createBoardDto: CreateBoardDto): Promise<BoardEntity> {
+    return this.boardRepository.createBoard(createBoardDto);
   }
 
-  createBoard(createBoardDto: CreateBoardDto) {
-    const { title, description } = createBoardDto;
-    const board: Board = {
-      id: uuid(),
-      title,
-      description,
-      status: BoardStatus.PUBLIC,
-    };
-
-    this.boards.push(board);
-    return board;
+  getBoardById(id: number): Promise<BoardEntity> {
+    return this.boardRepository.getBoardById(id);
   }
 
-  getBoardById(id: string): Board {
-    return this.boards.find((board) => board.id === id);
+  deleteBoard(id: number): Promise<void> {
+    this.boardRepository.deleteBoard(id);
   }
 
-  deleteBoard(id: string): void {
-    this.boards = this.boards.filter((board) => board.id !== id);
-  }
-
-  updateBoardStatus(id: string, status: BoardStatus): Board {
-    const board = this.getBoardById(id);
-    board.status = status;
-    return board;
-  }
+  // updateBoardStatus(id: string, status: BoardStatus): Board {
+  //   const board = this.getBoardById(id);
+  //   board.status = status;
+  //   return board;
+  // }
 }
