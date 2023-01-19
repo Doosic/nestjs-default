@@ -2,10 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { BoardEntity } from './board.entity';
 import { BoardRepository } from './board.repository';
+import { BoardStatus } from './board-status.enum';
 
 @Injectable()
 export class BoardsService {
   constructor(private boardRepository: BoardRepository) {}
+
+  getAllBoard(): Promise<BoardEntity[]> {
+    return this.boardRepository.getAllBoards();
+  }
 
   createBoard(createBoardDto: CreateBoardDto): Promise<BoardEntity> {
     return this.boardRepository.createBoard(createBoardDto);
@@ -16,12 +21,10 @@ export class BoardsService {
   }
 
   deleteBoard(id: number): Promise<void> {
-    this.boardRepository.deleteBoard(id);
+    return this.boardRepository.deleteBoard(id);
   }
 
-  // updateBoardStatus(id: string, status: BoardStatus): Board {
-  //   const board = this.getBoardById(id);
-  //   board.status = status;
-  //   return board;
-  // }
+  updateBoardStatus(id: number, status: BoardStatus): Promise<BoardEntity> {
+    return this.boardRepository.updateBoardStatus(id, status);
+  }
 }
