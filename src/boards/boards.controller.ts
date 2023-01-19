@@ -13,6 +13,8 @@ import {
 import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { BoardEntity } from './board.entity';
+import { BoardStatusValidationPipe } from './pipes/board-status-validation.pipe';
+import { BoardStatus } from './board-status.enum';
 
 @Controller('boards')
 export class BoardsController {
@@ -26,10 +28,10 @@ export class BoardsController {
   // private 사용시 boardService 프로퍼티는 BoardsController 클래스 내부에서만 사용이 가능하다.
   constructor(private boardsService: BoardsService) {}
 
-  // @Get('/')
-  // getAllBoard(): Board[] {
-  //   return this.boardsService.getAllBoards();
-  // }
+  @Get()
+  getAllBoard(): Promise<BoardEntity[]> {
+    return this.boardsService.getAllBoard();
+  }
 
   @Get('/:id')
   getBoardById(@Param('id') id: number): Promise<BoardEntity> {
@@ -43,16 +45,15 @@ export class BoardsController {
   }
 
   @Delete('/:id')
-  deleteBoard(@Param('id', ParseIntPipe) id: number): Promise<any> {
-    console.log(id);
-    this.boardsService.deleteBoard(id);
+  deleteBoard(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.boardsService.deleteBoard(id);
   }
 
-  // @Patch('/:id/status')
-  // updateBoardStatus(
-  //   @Param('id') id: string,
-  //   @Body('status', BoardStatusValidationPipe) status: BoardStatus,
-  // ) {
-  //   return this.boardsService.updateBoardStatus(id, status);
-  // }
+  @Patch('/:id/status')
+  updateBoardStatus(
+    @Param('id', ParseIntPipe) id: number,
+    @Body('status', BoardStatusValidationPipe) status: BoardStatus,
+  ): Promise<BoardEntity> {
+    return this.boardsService.updateBoardStatus(id, status);
+  }
 }

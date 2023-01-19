@@ -13,6 +13,10 @@ export class BoardRepository {
     private boardRepository: Repository<BoardEntity>,
   ) {}
 
+  async getAllBoards(): Promise<BoardEntity[]> {
+    return this.boardRepository.find({ order: { id: 'DESC' } });
+  }
+
   async createBoard(createBoardDto: CreateBoardDto): Promise<BoardEntity> {
     const { title, description } = createBoardDto;
     const board = this.boardRepository.create({
@@ -38,5 +42,16 @@ export class BoardRepository {
     if (result.affected === 0) {
       throw new NotFoundException(`Can't find Board with id ${id}`);
     }
+  }
+
+  async updateBoardStatus(
+    id: number,
+    status: BoardStatus,
+  ): Promise<BoardEntity> {
+    const board = await this.getBoardById(id);
+
+    board.status = status;
+    await this.boardRepository.save(board);
+    return board;
   }
 }
