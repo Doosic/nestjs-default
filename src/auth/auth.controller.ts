@@ -4,9 +4,14 @@ import {
   Post,
   UsePipes,
   ValidationPipe,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { AuthCredentialsDto } from './dto/auth-credential.dto';
+import { GetUser } from './get-user.decorator';
+import { UserEntity } from './user.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -20,7 +25,16 @@ export class AuthController {
 
   @Post('/signin')
   @UsePipes(ValidationPipe)
-  signIn(@Body() authCredentialsDto: AuthCredentialsDto): Promise<string> {
+  signIn(
+    @Body() authCredentialsDto: AuthCredentialsDto,
+  ): Promise<{ accessToken: string }> {
     return this.authService.signIn(authCredentialsDto);
+  }
+
+  // @UseGuards(AuthGuard()) 가 있어야 request 안에 UserEntity라는 값이 존재한다.
+  @Post('/test')
+  @UseGuards(AuthGuard())
+  test(@GetUser() user: UserEntity) {
+    console.log('user: ', user);
   }
 }

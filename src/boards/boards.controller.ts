@@ -15,8 +15,11 @@ import { CreateBoardDto } from './dto/create-board.dto';
 import { BoardEntity } from './board.entity';
 import { BoardStatusValidationPipe } from './pipes/board-status-validation.pipe';
 import { BoardStatus } from './board-status.enum';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('boards')
+@UseGuards(AuthGuard())
 export class BoardsController {
   // 접근제한자 선언 전 주입방식
   // boardsService: BoardsService;

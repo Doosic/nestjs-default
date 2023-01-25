@@ -8,11 +8,13 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt/dist';
 
 export class UserRepository {
   constructor(
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
+    private jwtService: JwtService,
   ) {}
 
   async createUser(authCredentialsDto: AuthCredentialsDto): Promise<void> {
@@ -36,16 +38,28 @@ export class UserRepository {
     }
   }
 
-  async signIn(authCredentialsDto: AuthCredentialsDto): Promise<string> {
+  async signIn(
+    authCredentialsDto: AuthCredentialsDto,
+  ): Promise<{ accessToken: string }> {
     const { username, password } = authCredentialsDto;
     const user = await this.userRepository.findOne({
       where: { username: username },
     });
 
     if (user && (await bcrypt.compare(password, user.password))) {
-      return 'login success';
+      // 유저 토큰 생성 (Secret + Payload)
+      const payload = { username };
+      const accessToken = await this.jwtService.sign(payload);
+      return { accessToken };
     } else {
       throw new UnauthorizedException('login failed');
     }
+  }
+
+  async findUser(username: string): Promise<UserEntity> {
+    const user = await this.userRepository.findOne({
+      where: { username: username },
+    });
+    return user;
   }
 }
