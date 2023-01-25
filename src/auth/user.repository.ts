@@ -1,5 +1,5 @@
 import { Repository } from 'typeorm';
-import { UserEntity } from './user.entity';
+import { User } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthCredentialsDto } from './dto/auth-credential.dto';
 import * as bcrypt from 'bcryptjs';
@@ -12,8 +12,8 @@ import { JwtService } from '@nestjs/jwt/dist';
 
 export class UserRepository {
   constructor(
-    @InjectRepository(UserEntity)
-    private userRepository: Repository<UserEntity>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
     private jwtService: JwtService,
   ) {}
 
@@ -56,7 +56,7 @@ export class UserRepository {
     }
   }
 
-  async findUser(username: string): Promise<UserEntity> {
+  async findUser(username: string): Promise<User> {
     const user = await this.userRepository.findOne({
       where: { username: username },
     });

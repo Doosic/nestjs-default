@@ -11,7 +11,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { AuthCredentialsDto } from './dto/auth-credential.dto';
 import { GetUser } from './get-user.decorator';
-import { UserEntity } from './user.entity';
+import { User } from './user.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -34,7 +34,7 @@ export class AuthController {
   // @UseGuards(AuthGuard()) 가 있어야 request 안에 UserEntity라는 값이 존재한다.
   @Post('/test')
   @UseGuards(AuthGuard())
-  test(@GetUser() user: UserEntity) {
+  test(@GetUser() user: User) {
     console.log('user: ', user);
   }
 }
