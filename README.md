@@ -1,4 +1,12 @@
-# NestJS 학습 Step1
+# NestJS 기본 셋팅
 
- - 개인 토이프로젝트를 NestJS, TypeScript를 이용하여 진행하려던 도중
-   NestJS, TypeScript 를 회사에서 도입. 강의와 책을 참조하여 학습진행중
+ - NestJS를 프로젝트에 사용할때에 가져다 사용할 레거시 코드를 만들어두는 용도이다.
+ (에러코드, 전역에러 핸들러, APIResponseObject, TestCode, version, refreshToken(Login), Paging, FileUpload.......)
+ 
+ 1.Error Code
+ 2.Exception Handler
+ 3.APIResponseObject
+ 4.TestCode
+ 5.refreshToken
+ 6.Paging
+ 7.FileUpload
